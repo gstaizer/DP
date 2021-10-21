@@ -18,7 +18,7 @@ namespace Valuator
                 c.Close();
             }
         }
-        public async void Send(string key, string message)
+        public void Send(string key, string message)
         {
             CancellationTokenSource cts = new CancellationTokenSource();
             Task.Factory.StartNew(() => ProduceAsync(key, message), cts.Token);

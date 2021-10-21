@@ -21,13 +21,16 @@ namespace Valuator.Pages
 
         public double Rank { get; set; }
         public double Similarity { get; set; }
+        public bool IsRankEmpty { get; set; }
 
         public void OnGet(string id)
         {
             _logger.LogDebug(id);
 
             //TODO: проинициализировать свойства Rank и Similarity сохранёнными в БД значениями
-            Rank = Convert.ToDouble(_storage.Load("RANK-" + id));
+            string rank = _storage.Load("RANK-" + id);
+            IsRankEmpty = rank == null;
+            Rank = Convert.ToDouble(rank);
             Similarity = Convert.ToDouble(_storage.Load("SIMILARITY-" + id));
         }
     }

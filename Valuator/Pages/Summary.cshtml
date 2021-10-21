@@ -1,6 +1,8 @@
 ﻿@page
 @model Valuator.Pages.SummaryModel
-@{
+@if (@Model.IsRankEmpty)
+{
+    <meta http-equiv="refresh" content="2">
 }
 <p>Оценка содержания: @Model.Rank</p>
 <p>Плагиат: @Model.Similarity</p>
