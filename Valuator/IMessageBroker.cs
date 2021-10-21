@@ -4,4 +4,4 @@ namespace Valuator
     {
         void Send(string key, string message);
     }
-}
+} 

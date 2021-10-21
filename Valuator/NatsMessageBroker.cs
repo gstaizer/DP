@@ -7,17 +7,21 @@ namespace Valuator
 {
     public class NatsMessageBroker : IMessageBroker
     {
-        public void Send(string key, string message)
+        private async Task ProduceAsync(string key, string message)
         {
-            Task.Factory.StartNew(() =>
+            ConnectionFactory cf = new ConnectionFactory();
+            using (IConnection c = cf.CreateConnection())
             {
-                ConnectionFactory cf = new ConnectionFactory();
-                IConnection c = cf.CreateConnection();
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 c.Publish(key, data);
                 c.Drain();
                 c.Close();
-            });
+            }
+        }
+        public async void Send(string key, string message)
+        {
+            CancellationTokenSource cts = new CancellationTokenSource();
+            Task.Factory.StartNew(() => ProduceAsync(key, message), cts.Token);
         }
     }
 }
