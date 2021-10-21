@@ -36,8 +36,6 @@ namespace Valuator.Pages
             
             string similarity = "0";
 
-            _messageBroker.Send("valuator.processing.rank", id);
-
             if(text == null)
             {
                 text = "";
@@ -52,6 +50,8 @@ namespace Valuator.Pages
 
             string textKey = "TEXT-" + id;
             _storage.Store(textKey, text);
+
+            _messageBroker.Send("valuator.processing.rank", id);
 
             return Redirect($"summary?id={id}");
         }
