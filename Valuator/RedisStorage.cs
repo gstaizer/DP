@@ -6,14 +6,12 @@ namespace Valuator
     public class RedisStorage : IStorage
     {
         private readonly IDatabase _db;
-         private readonly IServer _server;
         private string host = "localhost";
         private int  port = 6379;
 
         public RedisStorage() {
             IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(host);
             _db = connectionMultiplexer.GetDatabase();
-             _server = connectionMultiplexer.GetServer(host, port);
         }
 
         public string Load(string key)

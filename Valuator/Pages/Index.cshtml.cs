@@ -14,11 +14,13 @@ namespace Valuator.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         private readonly IStorage _storage;
+        private readonly IMessageBroker _messageBroker;
 
-        public IndexModel(ILogger<IndexModel> logger, IStorage storage)
+        public IndexModel(ILogger<IndexModel> logger, IStorage storage, IMessageBroker messageBroker)
         {
             _logger = logger;
             _storage = storage;
+            _messageBroker = messageBroker;
         }
 
         public void OnGet()
@@ -32,8 +34,9 @@ namespace Valuator.Pages
 
             string id = Guid.NewGuid().ToString();
             
-            string rank = "0";
             string similarity = "0";
+
+            _messageBroker.Send("valuator.processing.rank", id);
 
             if(text == null)
             {
@@ -41,12 +44,8 @@ namespace Valuator.Pages
             }
             else
             {
-                rank = GetRank(text);
                 similarity = GetSimilarity(text).ToString();
             }
-
-            string rankKey = "RANK-" + id;
-            _storage.Store(rankKey, rank);
 
             string similarityKey = "SIMILARITY-" + id;
             _storage.Store(similarityKey, similarity);
@@ -55,11 +54,6 @@ namespace Valuator.Pages
             _storage.Store(textKey, text);
 
             return Redirect($"summary?id={id}");
-        }
-
-        private string GetRank(string text)
-        {
-            return ((double)text.Count(ch => !char.IsLetter(ch)) / (double)text.Length).ToString("0.##");
         }
 
         private double GetSimilarity(string text)

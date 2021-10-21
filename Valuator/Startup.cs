@@ -25,6 +25,7 @@ namespace Valuator
         {
             services.AddRazorPages();
             services.AddScoped<IStorage, RedisStorage>();
+            services.AddScoped<IMessageBroker, NatsMessageBroker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
