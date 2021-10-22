@@ -11,5 +11,6 @@
             <textarea name="text" rows="5" cols="50"></textarea>
             <input type="submit" />
         </div>
+        @Html.DropDownList("country", new SelectList(@Model.Countries))
     </form>
 </div>
