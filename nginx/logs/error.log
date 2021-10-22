@@ -1,3 +1,9 @@
 2021/10/21 13:02:51 [emerg] 2712#7476: CreateDirectory() "D:\Research-Data\RP\nginx/temp/client_body_temp" failed (3: The system cannot find the path specified)
 2021/10/21 13:04:19 [notice] 12644#1852: signal process started
 2021/10/21 13:04:19 [error] 12644#1852: OpenEvent("Global\ngx_quit_9436") failed (2: The system cannot find the file specified)
+2021/10/22 11:09:20 [emerg] 7008#11828: CreateDirectory() "D:\Research-Data\RP\nginx/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2021/10/22 11:10:10 [notice] 14652#6696: signal process started
+2021/10/22 11:10:10 [error] 14652#6696: OpenEvent("Global\ngx_quit_9436") failed (2: The system cannot find the file specified)
+2021/10/22 11:10:44 [emerg] 4400#6256: CreateDirectory() "D:\Research-Data\RP\nginx/temp/client_body_temp" failed (3: The system cannot find the path specified)
+2021/10/22 11:11:00 [notice] 11352#13980: signal process started
+2021/10/22 11:11:00 [error] 11352#13980: OpenEvent("Global\ngx_quit_9436") failed (2: The system cannot find the file specified)

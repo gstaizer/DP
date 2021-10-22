@@ -26,7 +26,7 @@ namespace Valuator
 
         public bool IsValueExist(string value)
         {
-            var keys = ConnectionMultiplexer.Connect(host).GetServer(host + ":" + port).Keys(pattern: "TEXT-*");
+            var keys = ConnectionMultiplexer.Connect(host + ",allowAdmin=true").GetServer(host + ":" + port).Keys(pattern: "TEXT-*");
             foreach (var key in keys) 
             {
                 string _value = Load(key);
