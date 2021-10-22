@@ -33,3 +33,4 @@ D:\Research-Data\RP\RankCalculator\obj\Debug\net5.0\RankCalculator.pdb
 D:\Research-Data\RP\RankCalculator\obj\Debug\net5.0\RankCalculator.genruntimeconfig.cache
 D:\Research-Data\RP\RankCalculator\bin\Debug\net5.0\Lib.dll
 D:\Research-Data\RP\RankCalculator\bin\Debug\net5.0\Lib.pdb
+D:\Research-Data\RP\RankCalculator\obj\Debug\net5.0\RankCalculator.csproj.CopyComplete

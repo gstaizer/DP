@@ -25,7 +25,7 @@ namespace Lib
 
         public bool IsValueExist(string value)
         {
-            var keys = ConnectionMultiplexer.Connect(host).GetServer(host + ":" + port).Keys(pattern: Constants.TextKey + "*");
+            var keys = ConnectionMultiplexer.Connect(host + ",allowAdmin=true").GetServer(host + ":" + port).Keys(pattern: Constants.TextKey + "*");
             foreach (var key in keys) 
             {
                 string _value = Load(key);
