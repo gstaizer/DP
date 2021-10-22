@@ -1,4 +1,3 @@
-
 setx DB_RUS "localhost:6000"
 setx DB_EU "localhost:6001"
 setx DB_OTHER "localhost:6002"

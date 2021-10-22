@@ -12,12 +12,14 @@ namespace Valuator.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IStorage _storage;
         private readonly IMessageBroker _messageBroker;
+        public string[] Countries { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, IStorage storage, IMessageBroker messageBroker)
         {
             _logger = logger;
             _storage = storage;
             _messageBroker = messageBroker;
+            Countries = Constants.Countries;
         }
 
         public void OnGet()
@@ -25,11 +27,15 @@ namespace Valuator.Pages
 
         }
 
-        public IActionResult OnPost(string text)
+        public IActionResult OnPost(string text, string country)
         {
             _logger.LogDebug(text);
 
             string id = Guid.NewGuid().ToString();
+
+            string shardId = GetShardIdByCountry(country);
+            _logger.LogDebug($"LOOKUP: {id}, {shardId}");
+            _storage.Store(Constants.ShardKey + id, shardId);
             
             string similarity = "0";
 
@@ -39,23 +45,39 @@ namespace Valuator.Pages
             }
             else
             {
+            _storage.Store(Constants.ShardKey + id, shardId);
                 similarity = GetSimilarity(text).ToString();
             }
 
             PublishSimilarityEvent(id, similarity);
 
-            _storage.Store(Constants.TextKey + id, text);
-
+            _storage.Store(shardId, Constants.TextKey + id, text);
             _messageBroker.Send("valuator.processing.rank", id);
-            //Console.WriteLine("SIM - " + GetSimilarity(text).ToString());
-            _storage.Store(Constants.SimilarityKey + id, similarity);
+            _storage.Store(shardId, Constants.SimilarityKey + id, similarity);
+            _storage.StoreToSet(shardId, Constants.TextSetKey, text);
 
             return Redirect($"summary?id={id}");
         }
 
+        private string GetShardIdByCountry(string country)
+        {
+            switch (country)
+            {
+                case "Russia":
+                    return Constants.SHARD_RUS;
+                case "France":
+                case "Germany":
+                    return Constants.SHARD_EU;
+                case "USA":
+                case "India":
+                    return Constants.SHARD_OTHER;
+            }         
+            return "";
+        }
+
         private double GetSimilarity(string text)
         {
-            return _storage.IsValueExist(text) ? 1 : 0;
+            return _storage.IsValueExist(Constants.TextSetKey, text) ? 1 : 0;
         }
 
         private void PublishSimilarityEvent(string id, string similarity)

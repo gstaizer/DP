@@ -27,14 +27,14 @@ namespace Valuator.Pages
         public void OnGet(string id)
         {
             _logger.LogDebug(id);
-            
-            //string segmentId = _storage.GetSegmentId(id);
 
             //TODO: проинициализировать свойства Rank и Similarity сохранёнными в БД значениями
-            string rank = _storage.Load(Constants.RankKey + id);
+            string shardId = _storage.GetShardId(id);
+
+            string rank = _storage.Load(shardId, Constants.RankKey + id);
             IsRankEmpty = rank == null;
             Rank = Convert.ToDouble(rank);
-            Similarity = Convert.ToDouble(_storage.Load(Constants.SimilarityKey + id));
+            Similarity = Convert.ToDouble(_storage.Load(shardId, Constants.SimilarityKey + id));
         }
     }
 }

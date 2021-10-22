@@ -6,13 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 
-
 namespace RankCalculator
 {
     class Program
     {
-        private static IDatabase db;
         private static IMessageBroker messageBroker;
+        private static RedisStorage storage;
 
         private static double CalculateRank(string text) 
         {
@@ -37,23 +36,24 @@ namespace RankCalculator
         static void Main(string[] args)
         {
             messageBroker = new NatsMessageBroker();
+            storage = new RedisStorage();
 
             ConnectionFactory cf = new ConnectionFactory();
             using IConnection c = cf.CreateConnection();
 
             IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("localhost");
-            db = connectionMultiplexer.GetDatabase();
 
             var s = c.SubscribeAsync("valuator.processing.rank", "rank_calculator", (sender, args) =>
             {
                 string id = Encoding.UTF8.GetString(args.Message.Data);
                 LogMessage(id);
 
-                string text = db.StringGet(Constants.TextKey + id);
+                string shardId = storage.GetShardId(id);
+
+                string text = storage.Load(shardId, Constants.TextKey + id);
                 string rank = CalculateRank(text).ToString("0.##");
                 
-                db.StringSet(Constants.RankKey + id, rank);  
-                //Console.WriteLine("RANK - " + rank + " TEXT - " + text);
+                storage.Store(shardId, Constants.RankKey + id, rank);
                 PublishRankEvent(id, rank);
             });
 
