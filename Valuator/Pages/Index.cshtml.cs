@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
-using Valuator;
+using System.Text.Json;
+using Lib;
 
 namespace Valuator.Pages
 {
@@ -45,13 +42,13 @@ namespace Valuator.Pages
                 similarity = GetSimilarity(text).ToString();
             }
 
-            string similarityKey = "SIMILARITY-" + id;
-            _storage.Store(similarityKey, similarity);
+            PublishSimilarityEvent(id, similarity);
 
-            string textKey = "TEXT-" + id;
-            _storage.Store(textKey, text);
+            _storage.Store(Constants.TextKey + id, text);
 
             _messageBroker.Send("valuator.processing.rank", id);
+            //Console.WriteLine("SIM - " + GetSimilarity(text).ToString());
+            _storage.Store(Constants.SimilarityKey + id, similarity);
 
             return Redirect($"summary?id={id}");
         }
@@ -59,6 +56,12 @@ namespace Valuator.Pages
         private double GetSimilarity(string text)
         {
             return _storage.IsValueExist(text) ? 1 : 0;
+        }
+
+        private void PublishSimilarityEvent(string id, string similarity)
+        {
+            EventContainer eventData = new EventContainer { Name = "valuator.similarity_calculated", Id = id, Value = similarity };
+            _messageBroker.Send("events", JsonSerializer.Serialize(eventData));
         }
     }
 }

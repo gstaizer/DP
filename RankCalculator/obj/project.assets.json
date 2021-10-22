@@ -1568,6 +1568,20 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
+      },
+      "Lib/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "dependencies": {
+          "NATS.Client": "0.14.0-pre3",
+          "StackExchange.Redis": "2.2.79"
+        },
+        "compile": {
+          "bin/placeholder/Lib.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Lib.dll": {}
+        }
       }
     }
   },
@@ -5513,10 +5527,16 @@
         "system.xml.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xdocument.nuspec"
       ]
+    },
+    "Lib/1.0.0": {
+      "type": "project",
+      "path": "../Lib/Lib.csproj",
+      "msbuildProject": "../Lib/Lib.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
+      "Lib >= 1.0.0",
       "NATS.Client >= 0.14.0-pre3",
       "StackExchange.Redis >= 2.2.79"
     ]
@@ -5551,7 +5571,11 @@
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Research-Data\\RP\\Lib\\Lib.csproj": {
+              "projectPath": "D:\\Research-Data\\RP\\Lib\\Lib.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

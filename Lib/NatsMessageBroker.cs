@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NATS.Client;
 
-namespace Valuator
+namespace Lib
 {
     public class NatsMessageBroker : IMessageBroker
     {
