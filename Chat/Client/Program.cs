@@ -13,7 +13,11 @@ namespace Client
         {
             try
             {
-                IPAddress ipAddress = host == "localhost" ? IPAddress.Loopback : IPAddress.Parse(host);
+                IPAddress ipAddress = IPAddress.Loopback;
+                if (host != "localhost")
+                {
+                    ipAddress = IPAddress.Parse(host);
+                }
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 // CREATE
