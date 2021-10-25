@@ -7,7 +7,3 @@ start "DB_BASIC" redis-server
 start "DB_RUS" redis-server --port 6000
 start "DB_EU" redis-server --port 6001
 start "DB_OTHER" redis-server --port 6002
-
-
-
-
