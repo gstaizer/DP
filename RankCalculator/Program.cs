@@ -10,9 +10,6 @@ namespace RankCalculator
 {
     class Program
     {
-        private static IMessageBroker messageBroker;
-        private static RedisStorage storage;
-
         private static double CalculateRank(string text) 
         {
             double rank = 0;
@@ -27,7 +24,7 @@ namespace RankCalculator
             Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fffffff")} - {message}");
         }
 
-        private static void PublishRankEvent(string id, string rank)
+        private static void PublishRankEvent(IMessageBroker messageBroker, string id, string rank)
         {
             EventContainer eventData = new EventContainer { Name = "rank_calculator.rank_calculated", Id = id, Value = rank };
             messageBroker.Send("events", JsonSerializer.Serialize(eventData));
@@ -35,8 +32,8 @@ namespace RankCalculator
 
         static void Main(string[] args)
         {
-            messageBroker = new NatsMessageBroker();
-            storage = new RedisStorage();
+            IMessageBroker messageBroker = new NatsMessageBroker();
+            RedisStorage storage = new RedisStorage();
 
             ConnectionFactory cf = new ConnectionFactory();
             using IConnection c = cf.CreateConnection();
@@ -54,7 +51,7 @@ namespace RankCalculator
                 string rank = CalculateRank(text).ToString("0.##");
                 
                 storage.Store(shardId, Constants.RankKey + id, rank);
-                PublishRankEvent(id, rank);
+                PublishRankEvent(messageBroker, id, rank);
             });
 
             s.Start();
