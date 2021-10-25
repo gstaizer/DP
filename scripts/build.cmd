@@ -4,5 +4,5 @@ dotnet build
 cd ..\RankCalculator\
 dotnet build
 
-cd ..\EventLogger\
+cd ..\EventsLogger\
 dotnet build
